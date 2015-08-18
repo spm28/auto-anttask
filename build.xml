@@ -1,0 +1,75 @@
+<project name="Ant Task" basedir="." default="dist">
+
+	<!-- Ant properties -->
+	
+	<property name="DT"     value="${DSTAMP}"/>
+	<property name="TM"     value="${TSTAMP}"/>
+	<property name="src.dir"     value="src"/>
+	<property name="build.dir"   value="build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="jar.dir"     value="${build.dir}/jar"/>
+	<property name="main-class"  value="com.test.Project"/>
+	<property name="test.dir"  value="test"/>
+	<property name="lib.dir"  value="lib"/>
+	<property name="dists.dir"  value="dists"/>
+<!--	<property name="btime"  value="${DSTAMP}${TSTAMP}"/> -->
+	<propertyfile  file="config/project.properties"  comment="Properties file" />
+
+<!-- 2.	There is clean target which deletes all files created during previous build    -->
+	<target name="clean">
+		<echo message="Deleting build dir"/>
+		<delete dir="${build.dir}" description="Clean up"/>
+	</target>
+  
+<!-- 3.There is init target which initialize some global build properties (current time and date, name of project folders) -->
+	<target name="init" depends="clean">
+		<tstamp/>
+		<echo message="TimeStamp of build - ${DSTAMP}${TSTAMP}"/>
+		<echo message="Make build dirs"/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.dir}/jar"/>
+	</target>
+	
+<!-- 4.	There is compile target which compiles .java into .class -->
+	<target name="compile" depends="init" description="Compile the project's source">
+		<echo message="Project class compile"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${lib.dir}/cc.jar" includeantruntime="false" />
+	</target>
+  
+<!-- 5.	There is test target which executes test inside test folder -->
+	<target name="test" depends="compile" >
+		<echo message="UnitTest class compile for test target"/>
+		<javac srcdir="${test.dir}" destdir="${test.dir}" classpath="${lib.dir}/junit.jar" includeantruntime="false"/>
+		<echo message="UnitTest start"/>
+		<junit printsummary="yes" haltonfailure="yes" >
+		<classpath>
+			<pathelement location="${test.dir}"/>
+			<pathelement path="${lib.dir}/junit.jar"/>
+			<pathelement path="${lib.dir}/hamcrest.jar"/>
+		</classpath> 
+		
+		<test name="com.test.UnitTest" haltonfailure="no" outfile="${test.dir}/result">
+			<formatter type="plain"/>
+			<formatter type="xml"/>
+		</test>
+		</junit>
+	</target>
+  
+<!-- 6.	There is jar target which create .jar file from compiled class -->  
+	<target name="jar" depends="test" description="JAR create">
+		<echo message="Jar file create"/>
+		<jar jarfile="${build.dir}/jar/anttask-${DSTAMP}${TSTAMP}.jar" basedir="${build.dir}"/>
+	</target>
+  
+<!-- 7.	There is dist target which create artifact containing built jar file, properties file and all runtime dependencies (Apache commons library)
+-->
+	<target name="dist" depends="jar" description="Copy dist artifacts">
+		<echo message="Dist generate"/>
+		<mkdir dir="${dists.dir}/dist-${DSTAMP}${TSTAMP}"/>
+		<copy file="${build.dir}/jar/anttask-${DSTAMP}${TSTAMP}.jar" tofile="${dists.dir}/dist-${DSTAMP}${TSTAMP}/jar/anttask.jar"/>
+		<copy file="${lib.dir}/cc.jar" tofile="${dists.dir}/dist-${DSTAMP}${TSTAMP}/lib/cc.jar"/>
+		<copy file="config/project.properties" tofile="${dists.dir}/dist-${DSTAMP}${TSTAMP}/config/project.properties"/>
+		<echo message="Dist location ${dists.dir}/dist-${DSTAMP}${TSTAMP}"/>
+	</target>
+
+</project>
