@@ -12,8 +12,8 @@
 	<property name="test.dir"  value="test"/>
 	<property name="lib.dir"  value="lib"/>
 	<property name="dists.dir"  value="dists"/>
-<!--	<property name="btime"  value="${DSTAMP}${TSTAMP}"/> -->
-	<propertyfile  file="config/project.properties"  comment="Properties file" />
+<!--	<property name="btime"  value="${DSTAMP}${TSTAMP}"/> 
+	<propertyfile  file="config/project.properties"  comment="Properties file" />-->
 
 <!-- 2.	There is clean target which deletes all files created during previous build    -->
 	<target name="clean">
