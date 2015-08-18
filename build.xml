@@ -36,7 +36,7 @@
 		<javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${lib.dir}/cc.jar" includeantruntime="false" />
 	</target>
   
-<!-- 5.	There is test target which executes test inside test folder -->
+<!-- 5.	There is test target which executes test inside test folder
 	<target name="test" depends="compile" >
 		<echo message="UnitTest class compile for test target"/>
 		<javac srcdir="${test.dir}" destdir="${test.dir}" classpath="${lib.dir}/junit.jar" includeantruntime="false"/>
@@ -53,10 +53,10 @@
 			<formatter type="xml"/>
 		</test>
 		</junit>
-	</target>
+	</target> -->
   
 <!-- 6.	There is jar target which create .jar file from compiled class -->  
-	<target name="jar" depends="test" description="JAR create">
+	<target name="jar" depends="init" description="JAR create">
 		<echo message="Jar file create"/>
 		<jar jarfile="${build.dir}/jar/anttask-${DSTAMP}${TSTAMP}.jar" basedir="${build.dir}"/>
 	</target>
